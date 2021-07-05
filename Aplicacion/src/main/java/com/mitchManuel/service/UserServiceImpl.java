@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import javax.validation.Valid;
+
+import com.mitchManuel.dto.ChangePasswordForm;
 import com.mitchManuel.entity.User;
 import com.mitchManuel.repository.UserRepository;
 
@@ -87,5 +89,25 @@ public class UserServiceImpl implements UserService{
 				.orElseThrow(() -> new Exception("UsernotFound in deleteUser -"+this.getClass().getName()));
 
 		repository.delete(user);
+	}
+	public User changePassword(ChangePasswordForm form) throws Exception{
+		User storedUser = repository
+				.findById( form.getId() )
+				.orElseThrow(() -> new Exception("UsernotFound in ChangePassword -"+this.getClass().getName()));
+		
+		if( form.getCurrentPassword().equals(storedUser.getPassword())) {
+			throw new Exception("Current Password Incorrect.");
+		}
+		
+		if ( form.getCurrentPassword().equals(form.getNewPassword())) {
+			throw new Exception("El nuevo password debe ser diferente al password actual!");
+		}
+		
+		if( !form.getNewPassword().equals(form.getConfirmPassword())) {
+			throw new Exception("El nuevo password y el confirmado no coinciden!");
+		}
+		
+		storedUser.setPassword(form.getNewPassword());
+		return repository.save(storedUser);
 	}
 }
