@@ -10,7 +10,7 @@ import com.mitchManuel.entity.User;
 @Repository
 public interface UserRepository extends CrudRepository<User,Long>{
 
-   // public Optional findByUsername(String username);
+   public Optional<User> findByUsername(String username);
 	
 	//public Optional findByIdAndPassword(Long id, String password);
 
